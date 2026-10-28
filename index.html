@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>allfnmay — Portofolio</title>
+<style>
+  :root {
+    --red: #e5091c;
+    --dark-red: #8f0612;
+    --black: #0b0b0b;
+    --white: #f5f5f5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: "Arial Black", Impact, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ---------- NAV ---------- */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 5vw;
+    background: var(--black);
+    border-bottom: 4px solid var(--red);
+  }
+  .logo {
+    font-size: 1.4rem; letter-spacing: 2px; text-transform: uppercase;
+    transform: skewX(-12deg);
+    background: var(--red); padding: 4px 16px;
+    clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+    text-decoration: none; color: var(--white);
+  }
+  nav { display: flex; gap: 10px; }
+  nav a {
+    color: var(--black); background: var(--white);
+    text-decoration: none; text-transform: uppercase;
+    font-size: .85rem; padding: 8px 18px;
+    transform: skewX(-12deg);
+    clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+    transition: background .15s, transform .15s;
+  }
+  nav a { position: relative; isolation: isolate; }
+  nav a::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: var(--red);
+    transform: translateX(-101%);
+    transition: transform .25s cubic-bezier(.7, 0, .2, 1);
+  }
+  nav a:hover { color: var(--white); transform: skewX(-12deg) translateY(-3px) scale(1.08); }
+  nav a:hover::before { transform: translateX(0); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative; min-height: 88vh;
+    display: grid; place-items: center; text-align: center;
+    padding: 80px 5vw;
+    background:
+      radial-gradient(circle, rgba(255,255,255,.08) 1.5px, transparent 2px) 0 0 / 14px 14px,
+      var(--black);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: var(--red);
+    clip-path: polygon(0 62%, 100% 18%, 100% 78%, 0 100%);
+    z-index: 0;
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0;
+    background: var(--white);
+    clip-path: polygon(0 70%, 100% 30%, 100% 34%, 0 74%);
+    z-index: 0;
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero h1 {
+    font-size: clamp(3.2rem, 15vw, 10rem);
+    line-height: .9; text-transform: uppercase;
+    font-style: italic; letter-spacing: -2px;
+    transform: rotate(-4deg);
+    text-shadow: 6px 6px 0 var(--red), 12px 12px 0 var(--black);
+  }
+  .tagline {
+    display: inline-block; margin-top: 36px;
+    background: var(--black); color: var(--white);
+    padding: 10px 28px; font-size: clamp(.8rem, 2.5vw, 1.1rem);
+    letter-spacing: 4px; text-transform: uppercase;
+    transform: rotate(-4deg) skewX(-12deg);
+    border-left: 8px solid var(--red);
+  }
+  .cta {
+    display: inline-block; margin: 36px 0 0 18px;
+    background: var(--white); color: var(--black);
+    padding: 14px 40px; text-decoration: none; text-transform: uppercase;
+    font-size: 1rem; letter-spacing: 2px;
+    clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+    transform: rotate(-4deg);
+    transition: background .15s, color .15s;
+  }
+  .cta:hover { background: var(--red); color: var(--white); }
+
+  /* ---------- SECTIONS ---------- */
+  section { padding: 90px 5vw; }
+  .section-title {
+    display: inline-block;
+    font-size: clamp(1.8rem, 6vw, 3.4rem);
+    text-transform: uppercase; font-style: italic;
+    background: var(--red); padding: 6px 36px 6px 24px;
+    clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%);
+    margin-bottom: 44px;
+    transform: skewX(-8deg);
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery {
+    display: grid; gap: 28px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .card {
+    position: relative; aspect-ratio: 4 / 3;
+    background: var(--white); color: var(--black);
+    clip-path: polygon(0 4%, 96% 0, 100% 94%, 4% 100%);
+    display: flex; align-items: flex-end;
+    overflow: hidden; cursor: pointer;
+    transition: transform .2s;
+  }
+  .card:nth-child(even) { clip-path: polygon(4% 0, 100% 5%, 96% 100%, 0 95%); }
+  .card:hover { transform: scale(1.04) rotate(-1.5deg); }
+  .card .thumb {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle, rgba(0,0,0,.18) 2px, transparent 2.5px) 0 0 / 12px 12px,
+      linear-gradient(135deg, #d9d9d9, #a8a8a8);
+  }
+  .card .label {
+    position: relative; width: 100%;
+    background: var(--black); color: var(--white);
+    padding: 12px 20px; font-size: .95rem; text-transform: uppercase;
+    border-top: 5px solid var(--red);
+    letter-spacing: 1px;
+  }
+  .card .label small { display: block; font-family: Arial, sans-serif; font-weight: normal; opacity: .7; margin-top: 2px; font-size: .75rem; letter-spacing: 0; }
+  .card:hover .label { background: var(--red); }
+
+  /* ---------- CONTACT ---------- */
+  #kontak { background: var(--red); }
+  #kontak .section-title { background: var(--black); }
+  form {
+    max-width: 640px; display: grid; gap: 18px;
+  }
+  label { text-transform: uppercase; font-size: .8rem; letter-spacing: 2px; }
+  input, textarea {
+    width: 100%; margin-top: 6px; padding: 14px 16px;
+    background: var(--white); color: var(--black);
+    border: none; border-left: 8px solid var(--black);
+    font: 1rem Arial, sans-serif;
+  }
+  input:focus, textarea:focus { outline: 3px solid var(--black); }
+  textarea { min-height: 150px; resize: vertical; }
+  button {
+    justify-self: start; border: none; cursor: pointer;
+    background: var(--black); color: var(--white);
+    padding: 16px 52px; font: 1rem "Arial Black", Impact, sans-serif;
+    text-transform: uppercase; letter-spacing: 3px;
+    clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+    transition: background .15s, color .15s;
+  }
+  button:hover { background: var(--white); color: var(--black); }
+  #status { font-family: Arial, sans-serif; min-height: 1.2em; }
+
+  footer {
+    padding: 28px 5vw; text-align: center;
+    background: var(--black); border-top: 4px solid var(--red);
+    font-size: .8rem; letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  /* ---------- ANIMASI PEMBUKA ---------- */
+  .intro { position: fixed; inset: 0; z-index: 100; pointer-events: none; overflow: hidden; }
+  .intro .panel {
+    position: absolute; top: 0; left: -25%; width: 150%; height: 100%;
+    transform: skewX(-18deg);
+    animation: exit .7s cubic-bezier(.8, 0, .2, 1) forwards;
+  }
+  .intro .p1 { background: var(--black); z-index: 3; animation-delay: .6s; }
+  .intro .p2 { background: var(--red);   z-index: 2; animation-delay: .75s; }
+  .intro .p3 { background: var(--white); z-index: 1; animation-delay: .9s; }
+  .intro .intro-text {
+    position: absolute; inset: 0; z-index: 4;
+    display: grid; place-items: center;
+    font-size: clamp(2rem, 9vw, 5rem); font-style: italic;
+    text-transform: uppercase; letter-spacing: 4px;
+    animation: introText 1.2s ease forwards;
+  }
+  @keyframes exit { to { transform: skewX(-18deg) translateX(130%); } }
+  @keyframes introText {
+    0%   { opacity: 0; transform: scale(1.6) rotate(-6deg); }
+    30%  { opacity: 1; transform: scale(1) rotate(-4deg); }
+    70%  { opacity: 1; transform: scale(1) rotate(-4deg); }
+    100% { opacity: 0; transform: scale(.9) rotate(-4deg); }
+  }
+
+  /* ---------- JUDUL MASUK DENGAN HENTAKAN ---------- */
+  .hero h1 { animation: slam .8s cubic-bezier(.2, .8, .2, 1) 1.25s both; }
+  .tagline, .cta { animation: fadeIn .5s ease 1.9s both; }
+  @keyframes slam {
+    0%   { opacity: 0; transform: translateY(-70px) scale(2.4) rotate(-10deg); }
+    55%  { opacity: 1; transform: translateY(0) scale(.95) rotate(-4deg); }
+    70%  { transform: translate(8px, -5px) scale(1.02) rotate(-4deg); }
+    82%  { transform: translate(-6px, 4px) rotate(-4deg); }
+    92%  { transform: translate(3px, -2px) rotate(-4deg); }
+    100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(-4deg); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro { display: none; }
+    .hero h1, .tagline, .cta { animation: none; }
+  }
+
+  @media (max-width: 600px) {
+    nav a { padding: 6px 10px; font-size: .7rem; }
+    .cta { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="panel p1"></div>
+  <div class="panel p2"></div>
+  <div class="panel p3"></div>
+  <div class="intro-text">allfnmay</div>
+</div>
+
+<header>
+  <a class="logo" href="#top">allfnmay</a>
+  <nav>
+    <a href="#karya">Karya</a>
+    <a href="#kontak">Kontak</a>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>allfnmay</h1>
+      <div class="tagline">Creative Portfolio</div><br>
+      <a class="cta" href="#karya">Lihat Karya</a>
+    </div>
+  </div>
+
+  <section id="karya">
+    <h2 class="section-title">Karya</h2>
+    <div class="gallery" id="gallery">
+      <!-- Kartu ini masih placeholder. Nanti diganti data dari database dan gambar dari R2. -->
+      <article class="card"><div class="thumb"></div><div class="label">Proyek 01<small>Kategori · 2026</small></div></article>
+      <article class="card"><div class="thumb"></div><div class="label">Proyek 02<small>Kategori · 2026</small></div></article>
+      <article class="card"><div class="thumb"></div><div class="label">Proyek 03<small>Kategori · 2026</small></div></article>
+      <article class="card"><div class="thumb"></div><div class="label">Proyek 04<small>Kategori · 2025</small></div></article>
+      <article class="card"><div class="thumb"></div><div class="label">Proyek 05<small>Kategori · 2025</small></div></article>
+      <article class="card"><div class="thumb"></div><div class="label">Proyek 06<small>Kategori · 2025</small></div></article>
+    </div>
+  </section>
+
+  <section id="kontak">
+    <h2 class="section-title">Kontak</h2>
+    <form id="contact-form">
+      <label>Nama<input type="text" name="name" required></label>
+      <label>Email<input type="email" name="email" required></label>
+      <label>Pesan<textarea name="message" required></textarea></label>
+      <button type="submit">Kirim</button>
+      <p id="status"></p>
+    </form>
+  </section>
+</main>
+
+<footer>© 2026 allfnmay</footer>
+
+<script>
+  // Hapus lapisan pembuka setelah animasinya selesai agar tidak menghalangi klik.
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      var intro = document.getElementById('intro');
+      if (intro) intro.remove();
+    }, 2200);
+  });
+
+  // Sementara form belum terhubung ke Resend; nanti diganti dengan fetch ke endpoint server.
+  document.getElementById('contact-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('status').textContent = 'Form belum terhubung ke email. Ini tahap berikutnya.';
+  });
+</script>
+</body>
+</html>
