@@ -18,13 +18,13 @@
 <meta property="og:title" content="allfnmay — Portofolio">
 <meta property="og:description" content="Portofolio kreatif allfnmay. Lihat karya dan hubungi saya.">
 <meta property="og:url" content="https://allfnmay.pages.dev/">
-<meta property="og:image" content="https://allfnmay.pages.dev/og-image.png">
+<meta property="og:image" content="https://allfnmay.pages.dev/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="allfnmay — Portofolio">
 <meta name="twitter:description" content="Portofolio kreatif allfnmay. Lihat karya dan hubungi saya.">
-<meta name="twitter:image" content="https://allfnmay.pages.dev/og-image.png">
+<meta name="twitter:image" content="https://allfnmay.pages.dev/og-image.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -484,37 +484,77 @@
   document.querySelectorAll('.reveal').forEach(watch);
 
   /* ---------- Galeri (placeholder) ---------- */
-  var works = [
-    ['Proyek 01', 'Kategori · 2026'], ['Proyek 02', 'Kategori · 2026'], ['Proyek 03', 'Kategori · 2026'],
-    ['Proyek 04', 'Kategori · 2025'], ['Proyek 05', 'Kategori · 2025'], ['Proyek 06', 'Kategori · 2025']
+  // Tiap karya: { title, meta, desc }. Data asli datang dari /api/projects (Neon).
+  var placeholders = [
+    { title: 'Proyek 01', meta: 'Kategori · 2026' }, { title: 'Proyek 02', meta: 'Kategori · 2026' },
+    { title: 'Proyek 03', meta: 'Kategori · 2026' }, { title: 'Proyek 04', meta: 'Kategori · 2025' },
+    { title: 'Proyek 05', meta: 'Kategori · 2025' }, { title: 'Proyek 06', meta: 'Kategori · 2025' }
   ];
   var gal = $('#gallery');
-  works.forEach(function (w, i) {
-    var wrap = document.createElement('div');
-    wrap.className = 'wrap reveal';
-    wrap.style.setProperty('--rd', (i % 3) * 0.12 + 's');
-    var n = String(i + 1).padStart(2, '0');
-    wrap.innerHTML =
-      '<button class="card" type="button" aria-label="Buka ' + w[0] + '"><i class="tape"></i>' +
-      '<div class="thumb"><span class="soon">segera hadir</span><span class="num">' + n + '</span></div>' +
-      '<div class="label"><b>' + w[0] + '</b><small>' + w[1] + '</small></div></button>';
-    gal.appendChild(wrap);
-    watch(wrap);
-    var card = $('.card', wrap);
-    if (fine && !reduce) {
-      card.addEventListener('mousemove', function (e) {
-        var r = card.getBoundingClientRect();
-        card.style.setProperty('--tx', (((e.clientY - r.top) / r.height - 0.5) * -12) + 'deg');
-        card.style.setProperty('--ty', (((e.clientX - r.left) / r.width - 0.5) * 14) + 'deg');
-      });
-      card.addEventListener('mouseleave', function () { card.style.setProperty('--tx', '0deg'); card.style.setProperty('--ty', '0deg'); });
-    }
-    card.addEventListener('click', function () { openLb(w); });
-  });
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text; // textContent: aman dari HTML yang disisipkan
+    return e;
+  }
+
+  function renderGallery(list) {
+    gal.textContent = '';
+    list.forEach(function (w, i) {
+      var wrap = el('div', 'wrap reveal');
+      wrap.style.setProperty('--rd', (i % 3) * 0.12 + 's');
+
+      var card = el('button', 'card');
+      card.type = 'button';
+      card.setAttribute('aria-label', 'Buka ' + w.title);
+      card.appendChild(el('i', 'tape'));
+
+      var thumb = el('div', 'thumb');
+      thumb.appendChild(el('span', 'soon', 'segera hadir'));
+      thumb.appendChild(el('span', 'num', String(i + 1).padStart(2, '0')));
+      card.appendChild(thumb);
+
+      var label = el('div', 'label');
+      label.appendChild(el('b', '', w.title));
+      label.appendChild(el('small', '', w.meta));
+      card.appendChild(label);
+
+      wrap.appendChild(card);
+      gal.appendChild(wrap);
+      watch(wrap);
+
+      if (fine && !reduce) {
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          card.style.setProperty('--tx', (((e.clientY - r.top) / r.height - 0.5) * -12) + 'deg');
+          card.style.setProperty('--ty', (((e.clientX - r.left) / r.width - 0.5) * 14) + 'deg');
+        });
+        card.addEventListener('mouseleave', function () { card.style.setProperty('--tx', '0deg'); card.style.setProperty('--ty', '0deg'); });
+      }
+      card.addEventListener('click', function () { openLb(w); });
+    });
+  }
+
+  renderGallery(placeholders); // tampil dulu, lalu diganti kalau data database tiba
+  fetch('/api/projects')
+    .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+    .then(function (rows) {
+      if (!Array.isArray(rows) || !rows.length) return;
+      renderGallery(rows.map(function (r) {
+        var meta = [r.category, r.year].filter(Boolean).join(' · ');
+        return { title: r.title, meta: meta, desc: r.description || '' };
+      }));
+    })
+    .catch(function () { /* tetap pakai placeholder */ });
 
   /* ---------- Lightbox ---------- */
   var lb = $('#lb');
-  function openLb(w) { $('#lb-title').textContent = w[0]; $('#lb-meta').textContent = w[1] + ' — gambar dan deskripsi akan muncul di sini.'; lb.classList.add('open'); $('#lb-close').focus(); }
+  function openLb(w) {
+    $('#lb-title').textContent = w.title;
+    $('#lb-meta').textContent = w.desc ? w.meta + ' — ' + w.desc : w.meta + ' — gambar dan deskripsi akan muncul di sini.';
+    lb.classList.add('open'); $('#lb-close').focus();
+  }
   function closeLb() { lb.classList.remove('open'); }
   $('#lb-close').addEventListener('click', closeLb);
   lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });

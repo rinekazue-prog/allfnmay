@@ -1,0 +1,7 @@
+{
+  "name": "allfnmay",
+  "private": true,
+  "dependencies": {
+    "@neondatabase/serverless": "latest"
+  }
+}
