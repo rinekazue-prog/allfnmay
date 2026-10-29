@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — allfnmay</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#e5091c; --black:#0b0b0b; --white:#f4f1ea; --display:"Anton",Impact,sans-serif; --marker:"Permanent Marker","Comic Sans MS",cursive; --mono:"Space Mono",ui-monospace,Menlo,monospace; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--black); color: var(--white); font-family: var(--mono); min-height: 100vh;
+    background-image: radial-gradient(circle, rgba(255,255,255,.07) 1.4px, transparent 1.8px); background-size: 13px 13px; }
+  a { color: inherit; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 5vw; border-bottom: 4px solid var(--red); background: var(--black); }
+  .bar a { font-family: var(--display); text-transform: uppercase; letter-spacing: 1px; font-size: 1.3rem; text-decoration: none; background: var(--white); color: var(--black); padding: 3px 12px 1px; transform: rotate(-2deg); box-shadow: 4px 4px 0 var(--red); }
+  main { max-width: 860px; margin: 0 auto; padding: 40px 5vw 80px; }
+  h1 { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(2.4rem, 8vw, 4.5rem); line-height: 1; margin-bottom: 24px; text-shadow: 4px 4px 0 var(--red); }
+  h2 { font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; font-size: 1.6rem; margin-bottom: 14px; }
+  [hidden] { display: none !important; }
+  .card { background: var(--white); color: var(--black); padding: 26px 24px; box-shadow: 10px 10px 0 var(--red); margin-bottom: 40px; }
+  .note { font-size: .8rem; opacity: .75; margin-bottom: 18px; line-height: 1.5; }
+  #whoami { font-size: .8rem; margin-bottom: 26px; word-break: break-all; }
+  #whoami b { color: var(--red); }
+  #clerk-sign-in { display: flex; justify-content: center; padding-top: 8px; }
+  .msg { padding: 14px 16px; margin-bottom: 26px; border-left: 8px solid var(--red); background: #1a1a1a; font-size: .85rem; line-height: 1.55; }
+  label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 16px; }
+  input, textarea { width: 100%; margin-top: 6px; padding: 10px 2px; background: transparent; color: var(--black); border: 0; border-bottom: 3px solid var(--black); font: 400 1rem var(--mono); outline: 0; }
+  input:focus, textarea:focus { border-bottom-color: var(--red); }
+  textarea { min-height: 90px; resize: vertical; }
+  .row { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
+  button { border: 0; font-family: var(--display); text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
+  .btn { background: var(--black); color: var(--white); font-size: 1.15rem; padding: 12px 30px 8px; box-shadow: 5px 5px 0 var(--red); transition: transform .12s, box-shadow .12s; }
+  .btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--red); }
+  .btn:active { transform: translate(4px,4px); box-shadow: 1px 1px 0 var(--red); }
+  .btn:disabled { opacity: .5; cursor: wait; }
+  #formStatus { margin-top: 14px; font-family: var(--marker); font-size: 1.05rem; min-height: 1.3em; color: #9d0613; }
+  ul { list-style: none; display: grid; gap: 14px; }
+  li { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 14px 16px; border: 3px solid var(--white); background: #141414; }
+  li .t b { font-family: var(--display); font-weight: 400; font-size: 1.4rem; letter-spacing: 1px; text-transform: uppercase; }
+  li .t small { display: block; font-size: .72rem; opacity: .7; margin-top: 3px; }
+  li .t em { font-style: normal; color: var(--red); font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; margin-left: 8px; }
+  .del { background: transparent; color: var(--white); border: 2px solid var(--red); font-size: .95rem; padding: 6px 14px 3px; }
+  .del:hover { background: var(--red); }
+  .empty { opacity: .6; font-size: .85rem; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; } li { flex-direction: column; align-items: flex-start; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="/">← allfnmay</a>
+  <div id="userButton"></div>
+</div>
+
+<main>
+  <section id="auth" hidden>
+    <h1>Masuk</h1>
+    <div class="msg">Halaman ini khusus pemilik situs. Daftar atau masuk dengan akunmu di bawah.</div>
+    <div id="clerk-sign-in"></div>
+  </section>
+
+  <section id="app" hidden>
+    <h1>Admin</h1>
+    <p id="whoami">ID akunmu: <b id="uid"></b></p>
+    <div class="msg" id="notice" hidden></div>
+
+    <div id="panel" hidden>
+      <div class="card">
+        <h2>Tambah proyek</h2>
+        <p class="note">Gambar belum bisa diunggah di tahap ini. Itu menyusul bersama R2.</p>
+        <form id="addForm">
+          <div class="row">
+            <label>Judul<input name="title" maxlength="100" required></label>
+            <label>Tahun<input name="year" type="number" min="1900" max="2100" placeholder="2026"></label>
+          </div>
+          <label>Kategori<input name="category" maxlength="50" placeholder="Poster, Logo, Ilustrasi..."></label>
+          <label>Deskripsi<textarea name="description" maxlength="1000"></textarea></label>
+          <button class="btn" type="submit" id="addBtn">Simpan ✦</button>
+          <p id="formStatus" role="status"></p>
+        </form>
+      </div>
+
+      <h2>Daftar proyek</h2>
+      <ul id="list"></ul>
+    </div>
+  </section>
+</main>
+
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_cmVsYXhpbmctbGl6YXJkLTEzNjMuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://relaxing-lizard-1363.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"></script>
+
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var signInMounted = false, userButtonMounted = false;
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text; // textContent: aman dari HTML yang disisipkan
+    return e;
+  }
+
+  async function api(path, opts) {
+    opts = opts || {};
+    var token = Clerk.session ? await Clerk.session.getToken() : null;
+    var headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
+    if (token) headers.Authorization = 'Bearer ' + token;
+    var res = await fetch(path, Object.assign({}, opts, { headers: headers }));
+    var data = null;
+    try { data = await res.json(); } catch (e) {}
+    return { ok: res.ok, status: res.status, data: data };
+  }
+
+  function showNotice(text) {
+    var n = $('#notice');
+    n.textContent = text;
+    n.hidden = !text;
+  }
+
+  async function loadList() {
+    var r = await api('/api/admin/projects');
+    var panel = $('#panel');
+
+    if (r.status === 403) {
+      panel.hidden = true;
+      showNotice('Akun ini belum terdaftar sebagai admin. Kalau ini akunmu, salin ID di atas ke variabel ADMIN_USER_ID di Cloudflare, lalu deploy ulang.');
+      return;
+    }
+    if (r.status === 401) {
+      panel.hidden = true;
+      showNotice('Sesi tidak valid. Coba keluar, lalu masuk lagi.');
+      return;
+    }
+    if (!r.ok) {
+      panel.hidden = true;
+      showNotice((r.data && r.data.error) || 'Terjadi kesalahan. Coba muat ulang halaman.');
+      return;
+    }
+
+    showNotice('');
+    panel.hidden = false;
+    var list = $('#list');
+    list.textContent = '';
+    if (!r.data.length) { list.appendChild(el('li', 'empty', 'Belum ada proyek.')); return; }
+
+    r.data.forEach(function (p) {
+      var li = el('li');
+      var t = el('div', 't');
+      var b = el('b', '', p.title);
+      if (!p.published) b.appendChild(el('em', '', 'draf'));
+      t.appendChild(b);
+      t.appendChild(el('small', '', [p.category, p.year].filter(Boolean).join(' · ') || 'tanpa kategori'));
+      li.appendChild(t);
+
+      var del = el('button', 'del', 'Hapus');
+      del.type = 'button';
+      del.addEventListener('click', async function () {
+        if (!confirm('Hapus "' + p.title + '"? Ini tidak bisa dibatalkan.')) return;
+        del.disabled = true;
+        var res = await api('/api/admin/projects?id=' + encodeURIComponent(p.id), { method: 'DELETE' });
+        if (!res.ok) { alert((res.data && res.data.error) || 'Gagal menghapus'); del.disabled = false; return; }
+        loadList();
+      });
+      li.appendChild(del);
+      list.appendChild(li);
+    });
+  }
+
+  async function doRender() {
+    if (!Clerk.user) {
+      $('#app').hidden = true;
+      $('#auth').hidden = false;
+      if (!signInMounted) { Clerk.mountSignIn($('#clerk-sign-in'), {}); signInMounted = true; }
+      return;
+    }
+    if (signInMounted) { Clerk.unmountSignIn($('#clerk-sign-in')); signInMounted = false; }
+    $('#auth').hidden = true;
+    $('#app').hidden = false;
+    $('#uid').textContent = Clerk.user.id;
+    if (!userButtonMounted) { Clerk.mountUserButton($('#userButton')); userButtonMounted = true; }
+    await loadList();
+  }
+
+  // Render dijalankan satu per satu supaya perubahan status login tidak saling tabrak.
+  var busy = false, again = false;
+  async function render() {
+    if (busy) { again = true; return; }
+    busy = true;
+    try { do { again = false; await doRender(); } while (again); }
+    catch (e) { console.error(e); showNotice('Terjadi kesalahan. Coba muat ulang halaman.'); }
+    finally { busy = false; }
+  }
+
+  $('#addForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var f = e.target, btn = $('#addBtn'), st = $('#formStatus');
+    var body = {
+      title: f.title.value, category: f.category.value,
+      year: f.year.value, description: f.description.value
+    };
+    btn.disabled = true; st.textContent = 'Menyimpan…';
+    var r = await api('/api/admin/projects', { method: 'POST', body: JSON.stringify(body) });
+    btn.disabled = false;
+    if (!r.ok) { st.textContent = (r.data && r.data.error) || 'Gagal menyimpan'; return; }
+    f.reset();
+    st.textContent = 'Tersimpan ✦';
+    loadList();
+  });
+
+  window.addEventListener('load', async function () {
+    try {
+      await Clerk.load();
+    } catch (e) {
+      $('#auth').hidden = false;
+      $('#auth .msg').textContent = 'Gagal memuat sistem login. Matikan ad blocker lalu muat ulang halaman.';
+      return;
+    }
+    Clerk.addListener(function () { render(); });
+    render();
+  });
+})();
+</script>
+</body>
+</html>
