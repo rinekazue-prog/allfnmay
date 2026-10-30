@@ -22,29 +22,48 @@
   h2 { font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; font-size: 1.6rem; margin-bottom: 14px; }
   [hidden] { display: none !important; }
   .card { background: var(--white); color: var(--black); padding: 26px 24px; box-shadow: 10px 10px 0 var(--red); margin-bottom: 40px; }
-  .note { font-size: .8rem; opacity: .75; margin-bottom: 18px; line-height: 1.5; }
+  .note { font-size: .78rem; opacity: .75; margin-bottom: 18px; line-height: 1.5; }
+  .hint { display: block; font-size: .72rem; opacity: .65; margin-top: 6px; font-weight: 400; letter-spacing: 0; text-transform: none; line-height: 1.4; }
   #whoami { font-size: .8rem; margin-bottom: 26px; word-break: break-all; }
   #whoami b { color: var(--red); }
   #clerk-sign-in { display: flex; justify-content: center; padding-top: 8px; }
   .msg { padding: 14px 16px; margin-bottom: 26px; border-left: 8px solid var(--red); background: #1a1a1a; font-size: .85rem; line-height: 1.55; }
-  label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 16px; }
-  input, textarea { width: 100%; margin-top: 6px; padding: 10px 2px; background: transparent; color: var(--black); border: 0; border-bottom: 3px solid var(--black); font: 400 1rem var(--mono); outline: 0; }
+  label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 18px; }
+  input[type=text], input[type=url], input[type=number], textarea { width: 100%; margin-top: 6px; padding: 10px 2px; background: transparent; color: var(--black); border: 0; border-bottom: 3px solid var(--black); font: 400 1rem var(--mono); outline: 0; }
   input:focus, textarea:focus { border-bottom-color: var(--red); }
+  input[type=file] { margin-top: 8px; font: 400 .8rem var(--mono); max-width: 100%; }
+  input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--red); vertical-align: middle; margin-right: 10px; }
   textarea { min-height: 90px; resize: vertical; }
   .row { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
+  .media-box { border: 3px dashed var(--black); padding: 16px; margin-bottom: 18px; }
+  .media-box h3 { font-family: var(--display); font-weight: 400; letter-spacing: 1px; text-transform: uppercase; font-size: 1.15rem; margin-bottom: 8px; }
+  .media-box label { margin-bottom: 12px; }
+  .preview { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+  .preview img { width: 120px; height: 90px; object-fit: cover; border: 3px solid var(--black); }
+  .status { font-size: .78rem; margin-top: 8px; min-height: 1.2em; }
+  .bar-progress { height: 8px; background: #cfc9bb; margin-top: 8px; }
+  .bar-progress i { display: block; height: 100%; width: 0; background: var(--red); transition: width .15s; }
   button { border: 0; font-family: var(--display); text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
   .btn { background: var(--black); color: var(--white); font-size: 1.15rem; padding: 12px 30px 8px; box-shadow: 5px 5px 0 var(--red); transition: transform .12s, box-shadow .12s; }
   .btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--red); }
   .btn:active { transform: translate(4px,4px); box-shadow: 1px 1px 0 var(--red); }
   .btn:disabled { opacity: .5; cursor: wait; }
+  .btn.ghost { background: transparent; color: var(--black); border: 3px solid var(--black); box-shadow: none; margin-left: 10px; }
+  .small { background: transparent; color: var(--black); border: 2px solid var(--black); font-size: .85rem; padding: 5px 12px 2px; }
+  .small:hover { background: var(--black); color: var(--white); }
   #formStatus { margin-top: 14px; font-family: var(--marker); font-size: 1.05rem; min-height: 1.3em; color: #9d0613; }
   ul { list-style: none; display: grid; gap: 14px; }
-  li { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 14px 16px; border: 3px solid var(--white); background: #141414; }
-  li .t b { font-family: var(--display); font-weight: 400; font-size: 1.4rem; letter-spacing: 1px; text-transform: uppercase; }
+  li { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 12px 14px; border: 3px solid var(--white); background: #141414; }
+  li .l { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  li img { width: 72px; height: 54px; object-fit: cover; border: 2px solid var(--white); flex: none; }
+  li .ph { width: 72px; height: 54px; flex: none; background: #262626; border: 2px dashed #555; }
+  li .t b { font-family: var(--display); font-weight: 400; font-size: 1.35rem; letter-spacing: 1px; text-transform: uppercase; }
   li .t small { display: block; font-size: .72rem; opacity: .7; margin-top: 3px; }
   li .t em { font-style: normal; color: var(--red); font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; margin-left: 8px; }
-  .del { background: transparent; color: var(--white); border: 2px solid var(--red); font-size: .95rem; padding: 6px 14px 3px; }
-  .del:hover { background: var(--red); }
+  li .acts { display: flex; gap: 8px; flex: none; }
+  li .acts button { background: transparent; color: var(--white); border: 2px solid var(--white); font-size: .9rem; padding: 6px 14px 3px; }
+  li .acts .del { border-color: var(--red); }
+  li .acts button:hover { background: var(--red); border-color: var(--red); }
   .empty { opacity: .6; font-size: .85rem; }
   @media (max-width: 600px) { .row { grid-template-columns: 1fr; } li { flex-direction: column; align-items: flex-start; } }
 </style>
@@ -69,17 +88,45 @@
     <div class="msg" id="notice" hidden></div>
 
     <div id="panel" hidden>
-      <div class="card">
-        <h2>Tambah proyek</h2>
-        <p class="note">Gambar belum bisa diunggah di tahap ini. Itu menyusul bersama R2.</p>
+      <div class="card" id="formCard">
+        <h2 id="formTitle">Tambah proyek</h2>
+        <p class="note">Foto dan video diunggah ke Cloudinary. Proyek web: isi Link proyek dan unggah screenshot sebagai gambar.</p>
         <form id="addForm">
           <div class="row">
-            <label>Judul<input name="title" maxlength="100" required></label>
-            <label>Tahun<input name="year" type="number" min="1900" max="2100" placeholder="2026"></label>
+            <label>Judul<input type="text" name="title" maxlength="100" required></label>
+            <label>Tahun<input type="number" name="year" min="1900" max="2100" placeholder="2026"></label>
           </div>
-          <label>Kategori<input name="category" maxlength="50" placeholder="Poster, Logo, Ilustrasi..."></label>
+          <label>Kategori<input type="text" name="category" maxlength="50" placeholder="Poster, Logo, Ilustrasi, Web..."></label>
           <label>Deskripsi<textarea name="description" maxlength="1000"></textarea></label>
+
+          <div class="media-box">
+            <h3>Gambar</h3>
+            <label>Pilih foto<input type="file" id="imageFile" accept="image/*">
+              <span class="hint">Maksimal 10 MB. Dipakai sebagai gambar kartu dan gambar detail.</span></label>
+            <div class="bar-progress" id="imageBar" hidden><i></i></div>
+            <p class="status" id="imageStatus"></p>
+            <div class="preview" id="imagePreview" hidden>
+              <img id="imageThumb" alt="Pratinjau gambar">
+              <button type="button" class="small" id="imageClear">Hapus gambar</button>
+            </div>
+          </div>
+
+          <div class="media-box">
+            <h3>Video (opsional)</h3>
+            <label>Link YouTube atau Vimeo
+              <input type="url" name="video_url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+              <span class="hint">Cara termudah untuk video panjang. Kolom ini juga terisi otomatis kalau kamu unggah file di bawah.</span></label>
+            <label>Atau unggah file video<input type="file" id="videoFile" accept="video/*">
+              <span class="hint">Maksimal sekitar 100 MB (batas paket gratis Cloudinary, bisa berubah).</span></label>
+            <div class="bar-progress" id="videoBar" hidden><i></i></div>
+            <p class="status" id="videoStatus"></p>
+          </div>
+
+          <label>Link proyek (opsional)<input type="url" name="link_url" id="linkUrl" placeholder="https://situs-proyekmu.com"></label>
+          <label><input type="checkbox" name="published" id="published" checked>Tampilkan di situs</label>
+
           <button class="btn" type="submit" id="addBtn">Simpan ✦</button>
+          <button class="btn ghost" type="button" id="cancelEdit" hidden>Batal</button>
           <p id="formStatus" role="status"></p>
         </form>
       </div>
@@ -98,12 +145,24 @@
 (function () {
   var $ = function (s) { return document.querySelector(s); };
   var signInMounted = false, userButtonMounted = false;
+  var editingId = null, imageUrl = null, items = [];
+  var MAX_IMAGE = 10 * 1024 * 1024, MAX_VIDEO = 100 * 1024 * 1024;
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
     if (cls) e.className = cls;
     if (text !== undefined) e.textContent = text; // textContent: aman dari HTML yang disisipkan
     return e;
+  }
+
+  // Sisipkan transformasi Cloudinary supaya gambar kecil dan ringan.
+  function cld(url, t) {
+    try {
+      var u = new URL(url);
+      if (u.hostname !== 'res.cloudinary.com' || u.pathname.indexOf('/upload/') === -1) return url;
+      u.pathname = u.pathname.replace('/upload/', '/upload/' + t + '/');
+      return u.toString();
+    } catch (e) { return url; }
   }
 
   async function api(path, opts) {
@@ -123,6 +182,120 @@
     n.hidden = !text;
   }
 
+  /* ---------- Unggah ke Cloudinary ---------- */
+  async function uploadFile(file, type, onProgress) {
+    var sig = await api('/api/admin/sign-upload', { method: 'POST', body: JSON.stringify({ type: type }) });
+    if (!sig.ok) throw new Error((sig.data && sig.data.error) || 'Gagal menyiapkan unggahan');
+    var s = sig.data, fd = new FormData();
+    fd.append('file', file);
+    fd.append('api_key', s.apiKey);
+    fd.append('timestamp', s.timestamp);
+    fd.append('folder', s.folder);
+    fd.append('signature', s.signature);
+    return new Promise(function (resolve, reject) {
+      var x = new XMLHttpRequest();
+      x.open('POST', s.uploadUrl);
+      x.upload.onprogress = function (e) { if (e.lengthComputable) onProgress(Math.round(e.loaded / e.total * 100)); };
+      x.onload = function () {
+        var d = null;
+        try { d = JSON.parse(x.responseText); } catch (e) {}
+        if (x.status >= 200 && x.status < 300 && d && d.secure_url) resolve(d.secure_url);
+        else reject(new Error((d && d.error && d.error.message) || 'Unggahan ditolak oleh Cloudinary'));
+      };
+      x.onerror = function () { reject(new Error('Koneksi terputus saat mengunggah')); };
+      x.send(fd);
+    });
+  }
+
+  function wireUpload(inputSel, barSel, statusSel, type, maxBytes, onDone) {
+    var input = $(inputSel), bar = $(barSel), status = $(statusSel);
+    input.addEventListener('change', async function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      if (file.size > maxBytes) {
+        status.textContent = 'File terlalu besar (' + (file.size / 1048576).toFixed(1) + ' MB). Maksimal ' + Math.round(maxBytes / 1048576) + ' MB.';
+        input.value = '';
+        return;
+      }
+      bar.hidden = false; bar.firstElementChild.style.width = '0%';
+      status.textContent = 'Mengunggah…';
+      $('#addBtn').disabled = true;
+      try {
+        var url = await uploadFile(file, type, function (p) { bar.firstElementChild.style.width = p + '%'; status.textContent = 'Mengunggah… ' + p + '%'; });
+        onDone(url);
+        status.textContent = 'Selesai diunggah ✦ (jangan lupa klik Simpan)';
+      } catch (err) {
+        status.textContent = 'Gagal: ' + err.message;
+      } finally {
+        $('#addBtn').disabled = false;
+        bar.hidden = true;
+        input.value = '';
+      }
+    });
+  }
+
+  function setImage(url) {
+    imageUrl = url || null;
+    $('#imagePreview').hidden = !imageUrl;
+    if (imageUrl) $('#imageThumb').src = cld(imageUrl, 'c_fill,w_240,h_180,q_auto,f_auto');
+  }
+
+  wireUpload('#imageFile', '#imageBar', '#imageStatus', 'image', MAX_IMAGE, setImage);
+  wireUpload('#videoFile', '#videoBar', '#videoStatus', 'video', MAX_VIDEO, function (url) { $('#videoUrl').value = url; });
+  $('#imageClear').addEventListener('click', function () { setImage(null); $('#imageStatus').textContent = 'Gambar dihapus (klik Simpan untuk menerapkan).'; });
+
+  /* ---------- Formulir tambah / edit ---------- */
+  function resetForm() {
+    editingId = null;
+    $('#addForm').reset();
+    setImage(null);
+    $('#published').checked = true;
+    ['#imageStatus', '#videoStatus', '#formStatus'].forEach(function (s) { $(s).textContent = ''; });
+    $('#formTitle').textContent = 'Tambah proyek';
+    $('#addBtn').textContent = 'Simpan ✦';
+    $('#cancelEdit').hidden = true;
+  }
+
+  function startEdit(p) {
+    resetForm();
+    editingId = p.id;
+    var f = $('#addForm');
+    f.title.value = p.title || '';
+    f.year.value = p.year || '';
+    f.category.value = p.category || '';
+    f.description.value = p.description || '';
+    $('#videoUrl').value = p.video_url || '';
+    $('#linkUrl').value = p.link_url || '';
+    $('#published').checked = p.published !== false;
+    setImage(p.image_url);
+    $('#formTitle').textContent = 'Edit proyek';
+    $('#addBtn').textContent = 'Perbarui ✦';
+    $('#cancelEdit').hidden = false;
+    $('#formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  $('#cancelEdit').addEventListener('click', resetForm);
+
+  $('#addForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var f = e.target, btn = $('#addBtn'), st = $('#formStatus');
+    var body = {
+      title: f.title.value, category: f.category.value, year: f.year.value, description: f.description.value,
+      image_url: imageUrl, video_url: $('#videoUrl').value.trim() || null, link_url: $('#linkUrl').value.trim() || null,
+      published: $('#published').checked
+    };
+    btn.disabled = true; st.textContent = 'Menyimpan…';
+    var path = '/api/admin/projects' + (editingId ? '?id=' + encodeURIComponent(editingId) : '');
+    var r = await api(path, { method: editingId ? 'PATCH' : 'POST', body: JSON.stringify(body) });
+    btn.disabled = false;
+    if (!r.ok) { st.textContent = (r.data && r.data.error) || 'Gagal menyimpan'; return; }
+    var wasEdit = !!editingId;
+    resetForm();
+    $('#formStatus').textContent = wasEdit ? 'Diperbarui ✦' : 'Tersimpan ✦';
+    loadList();
+  });
+
+  /* ---------- Daftar proyek ---------- */
   async function loadList() {
     var r = await api('/api/admin/projects');
     var panel = $('#panel');
@@ -145,19 +318,36 @@
 
     showNotice('');
     panel.hidden = false;
+    items = r.data;
     var list = $('#list');
     list.textContent = '';
-    if (!r.data.length) { list.appendChild(el('li', 'empty', 'Belum ada proyek.')); return; }
+    if (!items.length) { list.appendChild(el('li', 'empty', 'Belum ada proyek.')); return; }
 
-    r.data.forEach(function (p) {
+    items.forEach(function (p) {
       var li = el('li');
+      var left = el('div', 'l');
+      if (p.image_url) {
+        var im = el('img');
+        im.src = cld(p.image_url, 'c_fill,w_144,h_108,q_auto,f_auto'); im.alt = '';
+        left.appendChild(im);
+      } else {
+        left.appendChild(el('div', 'ph'));
+      }
       var t = el('div', 't');
       var b = el('b', '', p.title);
       if (!p.published) b.appendChild(el('em', '', 'draf'));
       t.appendChild(b);
-      t.appendChild(el('small', '', [p.category, p.year].filter(Boolean).join(' · ') || 'tanpa kategori'));
-      li.appendChild(t);
+      var extra = [p.category, p.year].filter(Boolean).join(' · ') || 'tanpa kategori';
+      if (p.video_url) extra += ' · video';
+      if (p.link_url) extra += ' · link';
+      t.appendChild(el('small', '', extra));
+      left.appendChild(t);
+      li.appendChild(left);
 
+      var acts = el('div', 'acts');
+      var edit = el('button', '', 'Edit');
+      edit.type = 'button';
+      edit.addEventListener('click', function () { startEdit(p); });
       var del = el('button', 'del', 'Hapus');
       del.type = 'button';
       del.addEventListener('click', async function () {
@@ -165,9 +355,12 @@
         del.disabled = true;
         var res = await api('/api/admin/projects?id=' + encodeURIComponent(p.id), { method: 'DELETE' });
         if (!res.ok) { alert((res.data && res.data.error) || 'Gagal menghapus'); del.disabled = false; return; }
+        if (editingId === p.id) resetForm();
         loadList();
       });
-      li.appendChild(del);
+      acts.appendChild(edit);
+      acts.appendChild(del);
+      li.appendChild(acts);
       list.appendChild(li);
     });
   }
@@ -196,22 +389,6 @@
     catch (e) { console.error(e); showNotice('Terjadi kesalahan. Coba muat ulang halaman.'); }
     finally { busy = false; }
   }
-
-  $('#addForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    var f = e.target, btn = $('#addBtn'), st = $('#formStatus');
-    var body = {
-      title: f.title.value, category: f.category.value,
-      year: f.year.value, description: f.description.value
-    };
-    btn.disabled = true; st.textContent = 'Menyimpan…';
-    var r = await api('/api/admin/projects', { method: 'POST', body: JSON.stringify(body) });
-    btn.disabled = false;
-    if (!r.ok) { st.textContent = (r.data && r.data.error) || 'Gagal menyimpan'; return; }
-    f.reset();
-    st.textContent = 'Tersimpan ✦';
-    loadList();
-  });
 
   window.addEventListener('load', async function () {
     try {

@@ -241,6 +241,9 @@
   .thumb .num { position: absolute; right: 10px; bottom: -14px; font-family: var(--display); font-size: 7rem; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(11,11,11,.55); }
   .wrap:nth-child(3n) .thumb .num { -webkit-text-stroke-color: rgba(244,241,234,.5); }
   .thumb .soon { position: absolute; left: 12px; top: 12px; font-family: var(--marker); font-size: 1rem; background: var(--white); color: var(--black); padding: 2px 10px; transform: rotate(-3deg); }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+  .card:hover .thumb img { transform: scale(1.08); }
+  .thumb .kind { position: absolute; right: 10px; bottom: 10px; z-index: 2; font-family: var(--display); font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; background: var(--red); color: var(--white); padding: 3px 10px 1px; transform: rotate(-2deg); }
   .card .label { padding: 14px 4px 16px; display: flex; justify-content: space-between; align-items: end; gap: 10px; }
   .label b { position: relative; font-family: var(--display); font-weight: 400; font-size: 1.7rem; text-transform: uppercase; letter-spacing: 1px; }
   .label small { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; opacity: .7; white-space: nowrap; }
@@ -255,6 +258,10 @@
   .lb-img { aspect-ratio: 16 / 10; background: var(--red); position: relative; overflow: hidden; display: grid; place-items: center; }
   .lb-img::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle, rgba(0,0,0,.25) 2.4px, transparent 2.8px) 0 0 / 14px 14px; }
   .lb-img span { position: relative; font-family: var(--marker); font-size: clamp(1.4rem, 4vw, 2.6rem); color: var(--white); text-shadow: 3px 3px 0 var(--black); }
+  .lb-img img, .lb-img video, .lb-img iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: contain; background: var(--black); }
+  .lb-link { display: inline-block; margin-top: 14px; font-family: var(--display); font-size: 1.15rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; background: var(--black); color: var(--white); padding: 10px 24px 6px; box-shadow: 5px 5px 0 var(--red); transition: transform .12s, box-shadow .12s; }
+  .lb-link:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--red); }
+  .lb-link[hidden] { display: none; }
   .lb-info { padding: 16px 6px 18px; }
   .lb-info h3 { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 2.2rem; }
   .lb-info p { margin-top: 6px; font-size: .85rem; opacity: .75; }
@@ -390,8 +397,8 @@
 <div id="lb" role="dialog" aria-modal="true" aria-label="Detail karya">
   <div class="lb-card">
     <button class="lb-close" id="lb-close" aria-label="Tutup">✕</button>
-    <div class="lb-img"><span id="lb-big">Segera hadir</span></div>
-    <div class="lb-info"><h3 id="lb-title"></h3><p id="lb-meta"></p></div>
+    <div class="lb-img" id="lb-media"><span>Segera hadir</span></div>
+    <div class="lb-info"><h3 id="lb-title"></h3><p id="lb-meta"></p><a class="lb-link" id="lb-link" target="_blank" rel="noopener noreferrer" hidden>Kunjungi proyek ↗</a></div>
   </div>
 </div>
 
@@ -511,8 +518,16 @@
       card.appendChild(el('i', 'tape'));
 
       var thumb = el('div', 'thumb');
-      thumb.appendChild(el('span', 'soon', 'segera hadir'));
-      thumb.appendChild(el('span', 'num', String(i + 1).padStart(2, '0')));
+      var pic = w.image ? cld(w.image, 'c_fill,w_800,h_600,q_auto,f_auto') : null;
+      if (pic) {
+        var img = el('img');
+        img.src = pic; img.alt = w.title; img.loading = 'lazy'; img.decoding = 'async';
+        thumb.appendChild(img);
+        if (w.video) thumb.appendChild(el('span', 'kind', 'video'));
+      } else {
+        thumb.appendChild(el('span', 'soon', 'segera hadir'));
+        thumb.appendChild(el('span', 'num', String(i + 1).padStart(2, '0')));
+      }
       card.appendChild(thumb);
 
       var label = el('div', 'label');
@@ -543,19 +558,80 @@
       if (!Array.isArray(rows) || !rows.length) return;
       renderGallery(rows.map(function (r) {
         var meta = [r.category, r.year].filter(Boolean).join(' · ');
-        return { title: r.title, meta: meta, desc: r.description || '' };
+        return {
+          title: r.title, meta: meta, desc: r.description || '',
+          image: httpsUrl(r.image_url), video: httpsUrl(r.video_url), link: httpsUrl(r.link_url)
+        };
       }));
     })
     .catch(function () { /* tetap pakai placeholder */ });
 
+  /* ---------- Media: alamat aman, Cloudinary, embed video ---------- */
+  // Hanya alamat https yang dipakai; selain itu dianggap kosong.
+  function httpsUrl(v) {
+    if (typeof v !== 'string') return null;
+    try { var u = new URL(v); return u.protocol === 'https:' ? u.toString() : null; } catch (e) { return null; }
+  }
+  // Sisipkan transformasi Cloudinary (ukuran, kualitas, format otomatis) ke alamat gambar.
+  function cld(url, t) {
+    try {
+      var u = new URL(url);
+      if (u.hostname !== 'res.cloudinary.com' || u.pathname.indexOf('/upload/') === -1) return url;
+      u.pathname = u.pathname.replace('/upload/', '/upload/' + t + '/');
+      return u.toString();
+    } catch (e) { return url; }
+  }
+  // Alamat embed dibangun dari ID video yang sudah dicek, bukan dari alamat mentah.
+  function embedFor(url) {
+    var x; try { x = new URL(url); } catch (e) { return null; }
+    if (x.protocol !== 'https:') return null;
+    var h = x.hostname.replace(/^www\./, '').replace(/^m\./, ''), id = null, m;
+    if (h === 'youtu.be') id = x.pathname.slice(1).split('/')[0];
+    else if (h === 'youtube.com') {
+      if (x.pathname === '/watch') id = x.searchParams.get('v');
+      else if ((m = x.pathname.match(/^\/(?:embed|shorts|live)\/([^/?]+)/))) id = m[1];
+    }
+    if (id && /^[\w-]{6,20}$/.test(id)) return 'https://www.youtube-nocookie.com/embed/' + id;
+    if ((h === 'vimeo.com' || h === 'player.vimeo.com') && (m = x.pathname.match(/(\d{6,12})/))) {
+      return 'https://player.vimeo.com/video/' + m[1];
+    }
+    return null;
+  }
+
   /* ---------- Lightbox ---------- */
   var lb = $('#lb');
   function openLb(w) {
+    var media = $('#lb-media');
+    media.textContent = '';
+    var embed = w.video ? embedFor(w.video) : null;
+    if (embed) {
+      var f = el('iframe');
+      f.src = embed; f.title = w.title; f.allowFullscreen = true; f.loading = 'lazy';
+      f.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen');
+      f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      media.appendChild(f);
+    } else if (w.video && new URL(w.video).hostname === 'res.cloudinary.com') {
+      var v = el('video');
+      v.src = w.video; v.controls = true; v.playsInline = true; v.preload = 'metadata';
+      if (w.image) v.poster = cld(w.image, 'c_fill,w_1280,h_800,q_auto,f_auto');
+      media.appendChild(v);
+    } else if (w.image) {
+      var im = el('img');
+      im.src = cld(w.image, 'c_limit,w_1600,q_auto,f_auto'); im.alt = w.title;
+      media.appendChild(im);
+    } else {
+      media.appendChild(el('span', '', 'Segera hadir'));
+    }
+
     $('#lb-title').textContent = w.title;
-    $('#lb-meta').textContent = w.desc ? w.meta + ' — ' + w.desc : w.meta + ' — gambar dan deskripsi akan muncul di sini.';
+    var hasMedia = !!(w.image || w.video);
+    $('#lb-meta').textContent = w.desc ? (w.meta ? w.meta + ' — ' : '') + w.desc
+      : (hasMedia ? w.meta : w.meta + ' — gambar dan deskripsi akan muncul di sini.');
+    var link = $('#lb-link');
+    if (w.link) { link.href = w.link; link.hidden = false; } else { link.removeAttribute('href'); link.hidden = true; }
     lb.classList.add('open'); $('#lb-close').focus();
   }
-  function closeLb() { lb.classList.remove('open'); }
+  function closeLb() { lb.classList.remove('open'); $('#lb-media').textContent = ''; } // kosongkan agar video berhenti
   $('#lb-close').addEventListener('click', closeLb);
   lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
   addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLb(); });

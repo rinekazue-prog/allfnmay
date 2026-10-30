@@ -9,7 +9,7 @@ export async function onRequestGet({ env }) {
   try {
     const sql = neon(env.DATABASE_URL);
     const rows = await sql`
-      select id, title, category, year, description, image_key
+      select id, title, category, year, description, image_url, video_url, link_url
       from projects
       where published = true
       order by sort_order, id
