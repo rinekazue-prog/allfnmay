@@ -53,11 +53,16 @@ button { cursor: pointer; background: none; border: 0; }
 .ld-s { margin-top: 10px; font-size: 12px; letter-spacing: .3em; opacity: .6; font-weight: 700; }
 
 /* ===== Panggung utama ===== */
-#stage { position: fixed; inset: 0; overflow: hidden; background: radial-gradient(120% 90% at 70% 40%, var(--blue) 0%, var(--deep) 55%, var(--navy) 100%); }
+#stage { position: fixed; inset: 0; overflow: hidden; isolation: isolate; background: radial-gradient(120% 90% at 70% 40%, var(--blue) 0%, var(--deep) 55%, var(--navy) 100%); }
 #stage::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,12,.55) 100%); }
-.stripes { position: absolute; inset: -20%; background: repeating-linear-gradient(115deg, rgba(102,242,255,.06) 0 38px, transparent 38px 110px); animation: drift 14s linear infinite; }
+.character-video { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: .84; filter: saturate(1.08) contrast(1.06); pointer-events: none; animation: character-drift 16s ease-in-out infinite alternate; }
+.character-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(2,13,51,.84), rgba(4,32,111,.2) 52%, rgba(2,13,51,.28) 76%, rgba(2,13,51,.56)), linear-gradient(0deg, rgba(2,13,51,.28), transparent 55%, rgba(2,13,51,.12)); }
+.energy-sweep { position: absolute; z-index: 3; top: -25%; left: 12%; width: 3px; height: 150%; pointer-events: none; opacity: 0; background: linear-gradient(180deg, transparent, rgba(102,242,255,.18) 25%, #66f2ff 48%, #f4fbff 50%, rgba(102,242,255,.72) 53%, transparent); box-shadow: 0 0 20px rgba(102,242,255,.8); animation: energy-sweep 7.5s cubic-bezier(.18,.62,.36,1) infinite; }
+@keyframes character-drift { from { transform: scale(1.04) translate3d(0, 0, 0); } to { transform: scale(1.12) translate3d(-2%, 0, 0); } }
+@keyframes energy-sweep { 0%, 72% { transform: translate3d(-120vw, 0, 0) rotate(18deg); opacity: 0; } 74% { opacity: .9; } 86% { transform: translate3d(160vw, 0, 0) rotate(18deg); opacity: .55; } 87%, 100% { opacity: 0; } }
+.stripes { position: absolute; z-index: 2; inset: -20%; background: repeating-linear-gradient(115deg, rgba(102,242,255,.06) 0 38px, transparent 38px 110px); animation: drift 14s linear infinite; }
 @keyframes drift { to { transform: translate3d(-110px, 0, 0); } }
-#rings { position: absolute; left: -18vmin; top: 50%; width: 120vmin; height: 120vmin; transform: translateY(-50%); opacity: .55; animation: spin 90s linear infinite; }
+#rings { position: absolute; z-index: 2; left: -18vmin; top: 50%; width: 120vmin; height: 120vmin; transform: translateY(-50%); opacity: .55; animation: spin 90s linear infinite; }
 @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
 .shard { position: absolute; background: linear-gradient(160deg, rgba(102,242,255,.9), rgba(31,155,255,.35)); clip-path: polygon(0 0, 100% 40%, 30% 100%); opacity: .55; animation: float 9s ease-in-out infinite; }
 .s1 { width: 22vmin; height: 40vmin; right: 6%; top: 8%; }
@@ -70,6 +75,8 @@ button { cursor: pointer; background: none; border: 0; }
 
 .brand { position: absolute; top: var(--gy); right: var(--gx); z-index: 5; text-align: right; font-style: italic; font-weight: 900; font-size: clamp(20px, 3.4vw, 40px); letter-spacing: .02em; text-transform: uppercase; transform: skewX(-8deg); text-shadow: 0 3px 0 rgba(0,20,90,.6); }
 .brand::after { content: ''; display: block; height: 3px; margin-top: 4px; background: linear-gradient(90deg, transparent, var(--sky) 30%, var(--cyan)); }
+.motion-toggle { position: absolute; top: var(--gy); left: var(--gx); z-index: 8; padding: 7px 11px; border: 1px solid rgba(102,242,255,.72); color: var(--cyan); background: rgba(2,13,51,.82); font-size: 10px; font-weight: 900; letter-spacing: .14em; cursor: pointer; transform: skewX(-8deg); }
+.motion-toggle:hover, .motion-toggle:focus-visible { color: var(--navy); background: var(--cyan); outline: 2px solid var(--white); outline-offset: 3px; }
 .side-no { position: absolute; left: var(--gx); bottom: 6vh; z-index: 2; font-weight: 900; font-style: italic; font-size: clamp(90px, 22vw, 240px); line-height: .8; color: transparent; -webkit-text-stroke: 2px rgba(102,242,255,.35); user-select: none; pointer-events: none; transition: opacity .3s; }
 
 /* ===== Menu ===== */
@@ -93,7 +100,7 @@ button { cursor: pointer; background: none; border: 0; }
 @media (pointer: coarse) { .hud .kb { display: none; } .back .key { display: none; } .back::before { content: '◀'; font-size: 12px; } }
 
 /* ===== Halaman ===== */
-.page { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; background: linear-gradient(160deg, #0a3fd1 0%, #04206f 60%, #020d33 100%); visibility: hidden; opacity: 0; transition: opacity .3s, visibility .3s; }
+.page { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; background: linear-gradient(160deg, rgba(10,63,209,.9) 0%, rgba(4,32,111,.92) 60%, rgba(2,13,51,.96) 100%); visibility: hidden; opacity: 0; transition: opacity .3s, visibility .3s; }
 .page.open { visibility: visible; opacity: 1; }
 .page::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(115deg, rgba(102,242,255,.05) 0 34px, transparent 34px 96px); pointer-events: none; }
 .p-head { position: relative; z-index: 3; flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: var(--gy) var(--gx) 0; }
@@ -169,7 +176,10 @@ button { cursor: pointer; background: none; border: 0; }
 .lb-close { position: absolute; right: 14px; top: 14px; z-index: 2; min-width: 44px; min-height: 44px; background: var(--red); color: #fff; font-weight: 900; font-size: 20px; }
 
 /* ===== Layar kecil ===== */
+@media (max-aspect-ratio: 16/9) { .character-video { object-fit: contain; object-position: center bottom; } }
 @media (max-width: 640px) {
+  .character-video { opacity: .58; animation-duration: 20s; }
+  .energy-sweep { opacity: .65; }
   #menu { left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-8deg); width: 94vw; }
   .m-item { font-size: clamp(42px, 15vw, 76px); }
   .m-item.on { transform: translateX(14px) scale(1.03); }
@@ -184,9 +194,16 @@ button { cursor: pointer; background: none; border: 0; }
 @media (max-height: 520px) and (orientation: landscape) {
   #menu { top: 56%; } .m-item { font-size: clamp(30px, 9vh, 56px); } .side-no { display: none; }
 }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-}
+html.motion-off *, html.motion-off *::before, html.motion-off *::after { animation: none !important; transition: none !important; }
+html.motion-off .energy-sweep { display: none; }
+.manage-link { position: absolute; top: calc(var(--gy) + 54px); right: var(--gx); z-index: 7; padding: 8px 14px; color: var(--white); border: 1px solid rgba(102,242,255,.7); background: rgba(2,13,51,.65); font-size: 11px; font-weight: 900; letter-spacing: .16em; text-decoration: none; text-transform: uppercase; transform: skewX(-8deg); transition: color .18s, background .18s, transform .18s; }
+.manage-link:hover, .manage-link:focus-visible { color: var(--navy); background: var(--cyan); transform: skewX(-8deg) translateY(-2px); }
+.gallery-empty { grid-column: 1 / -1; max-width: 720px; margin: 12px auto; padding: 22px 26px; border-left: 4px solid var(--cyan); background: rgba(2,13,51,.55); line-height: 1.6; }
+.gallery-empty a { display: inline-block; margin-top: 10px; color: var(--cyan); font-weight: 900; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.send[disabled] { opacity: .6; cursor: wait; }
+.gallery-empty[hidden] { display: none; }
+@media (max-width: 640px) { .manage-link { top: calc(var(--gy) + 42px); font-size: 10px; padding: 7px 10px; } .motion-toggle { top: 12px; left: 12px; font-size: 9px; padding: 6px 8px; } }
 </style>
 </head>
 <body>
@@ -201,12 +218,18 @@ button { cursor: pointer; background: none; border: 0; }
 <div id="wipe"></div>
 
 <main id="stage">
+  <video id="character-video" class="character-video" aria-hidden="true" muted loop playsinline preload="metadata">
+    <source src="/makoto-wallpaper.mp4" type="video/mp4">
+  </video>
+  <div class="character-shade" aria-hidden="true"></div>
+  <div class="energy-sweep" aria-hidden="true"></div>
   <div class="stripes"></div>
   <svg id="rings" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
   <i class="shard s1"></i><i class="shard s2"></i><i class="shard s3"></i><i class="shard s4"></i>
   <div id="dust" aria-hidden="true"></div>
 
   <div class="brand">allfnmay</div>
+  <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="true">ANIMASI: ON</button>
   <div class="side-no" id="side-no" aria-hidden="true">01</div>
 
   <nav id="menu" aria-label="Menu utama">
@@ -226,7 +249,10 @@ button { cursor: pointer; background: none; border: 0; }
   <section class="page" id="p-karya" aria-label="Karya" aria-hidden="true">
     <div class="p-head"><h1 class="banner">Karya</h1><button class="back" data-back><span class="key">ESC</span> Kembali</button></div>
     <div class="p-no" aria-hidden="true">01</div>
-    <div class="p-body"><div class="grid" id="gallery"></div></div>
+    <div class="p-body">
+      <div class="grid" id="gallery"></div>
+      <p class="gallery-empty" id="gallery-empty" role="status" aria-live="polite" hidden>Belum ada karya yang dipublikasikan. Segera hadir.</p>
+    </div>
   </section>
 
   <section class="page" id="p-tentang" aria-label="Tentang" aria-hidden="true">
@@ -234,9 +260,11 @@ button { cursor: pointer; background: none; border: 0; }
     <div class="p-no" aria-hidden="true">02</div>
     <div class="p-body">
       <div class="about">
-        <div class="slab"><h2>Profil</h2><p>Halo, aku allfnmay. Di sini aku memajang karya-karya kreatifku. Ceritakan dirimu lebih panjang di bagian ini: apa yang kamu buat, apa yang kamu suka, dan kenapa orang perlu menghubungimu.</p></div>
+        <div class="slab"><h2>Profil</h2>
+          <p>Halo, aku allfnmay. Aku desainer sekaligus fotografer dan videografer pemula yang jatuh cinta sama tampilan film: warna hangat, bayangan lembut, butiran halus, dan momen yang terasa seperti potongan adegan.</p>
+          <p style="margin-top:.8em">Aku masih belajar, dan tiap karya di sini adalah satu langkah ke arah itu. Kalau kamu butuh desain, foto, atau video dengan nuansa sinematik, kirim pesan lewat halaman Kontak.</p></div>
         <div class="wrapf"><div class="slab"><h2>Data</h2>
-          <ul class="facts"><li><span>Nama</span>allfnmay</li><li><span>Bidang</span>Kreatif &amp; Desain</li><li><span>Kontak</span>Lewat form</li></ul></div></div>
+          <ul class="facts"><li><span>Nama</span>allfnmay</li><li><span>Bidang</span>Desain · Foto · Video</li><li><span>Level</span>Pemula</li><li><span>Gaya</span>Sinematik, film look</li><li><span>Kontak</span>Lewat form</li></ul></div></div>
       </div>
     </div>
   </section>
@@ -251,6 +279,7 @@ button { cursor: pointer; background: none; border: 0; }
           <label class="fld"><span>Nama</span><input name="name" autocomplete="name" maxlength="80" required></label>
           <label class="fld"><span>Email</span><input name="email" type="email" autocomplete="email" maxlength="120" required></label>
           <label class="fld"><span>Pesan</span><textarea name="message" maxlength="2000" required></textarea></label>
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="send" type="submit">Kirim</button>
           <div id="status" role="status" aria-live="polite"></div>
         </div>
@@ -273,7 +302,40 @@ button { cursor: pointer; background: none; border: 0; }
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var characterVideo = $('#character-video');
+  var motionButton = $('#motion-toggle');
+  var motionEnabled = true;
+  function setMotion(enabled) {
+    motionEnabled = enabled;
+    document.documentElement.classList.toggle('motion-off', !enabled);
+    if (motionButton) {
+      motionButton.textContent = enabled ? 'ANIMASI: ON' : 'ANIMASI: OFF';
+      motionButton.setAttribute('aria-pressed', String(enabled));
+      motionButton.setAttribute('aria-label', enabled ? 'Matikan animasi' : 'Aktifkan animasi');
+    }
+    if (characterVideo) {
+      if (enabled) {
+        var characterPlayback = characterVideo.play();
+        if (characterPlayback && characterPlayback.catch) characterPlayback.catch(function () {});
+      } else {
+        characterVideo.pause();
+      }
+    }
+  }
+  if (motionButton) motionButton.addEventListener('click', function () { setMotion(!motionEnabled); });
+  setMotion(true);
   var SVGNS = 'http://www.w3.org/2000/svg';
+  var sounds = {
+    move: new Audio('/audio/navigation.wav'),
+    select: new Audio('/audio/menu-open.mp3'),
+    back: new Audio('/audio/menu-back.mp3')
+  };
+  Object.keys(sounds).forEach(function (key) { sounds[key].preload = 'auto'; sounds[key].volume = .28; });
+  function playSound(key) {
+    var sound = sounds[key];
+    if (!sound) return;
+    try { sound.currentTime = 0; var playback = sound.play(); if (playback && playback.catch) playback.catch(function () {}); } catch (e) {}
+  }
 
   /* ---------- Hiasan: cincin jam & debu ---------- */
   (function () {
@@ -318,9 +380,11 @@ button { cursor: pointer; background: none; border: 0; }
   var nums = { karya: '01', tentang: '02', kontak: '03' };
 
   function focusItem(i, noFocus) {
+    var previous = cur;
     cur = (i + items.length) % items.length;
     items.forEach(function (b, k) { b.classList.toggle('on', k === cur); });
     $('#side-no').textContent = nums[items[cur].dataset.page];
+    if (cur !== previous && !noFocus) playSound('move');
     if (!noFocus) items[cur].focus({ preventScroll: true });
   }
   items.forEach(function (b, i) {
@@ -344,6 +408,7 @@ button { cursor: pointer; background: none; border: 0; }
   }
   function show(name, x, y) {
     if (openPage) return;
+    playSound('select');
     transition(function () {
       openPage = $('#p-' + name);
       openPage.classList.add('open'); openPage.setAttribute('aria-hidden', 'false');
@@ -353,6 +418,7 @@ button { cursor: pointer; background: none; border: 0; }
   }
   function hide() {
     if (!openPage) return;
+    playSound('back');
     transition(function () {
       openPage.classList.remove('open'); openPage.setAttribute('aria-hidden', 'true'); openPage = null;
       menu.removeAttribute('inert'); items[cur].focus({ preventScroll: true });
@@ -377,11 +443,6 @@ button { cursor: pointer; background: none; border: 0; }
   })();
 
   /* ---------- Galeri ---------- */
-  var placeholders = [
-    { title: 'Proyek 01', meta: 'Kategori · 2026' }, { title: 'Proyek 02', meta: 'Kategori · 2026' },
-    { title: 'Proyek 03', meta: 'Kategori · 2026' }, { title: 'Proyek 04', meta: 'Kategori · 2025' },
-    { title: 'Proyek 05', meta: 'Kategori · 2025' }, { title: 'Proyek 06', meta: 'Kategori · 2025' }
-  ];
   var gal = $('#gallery');
 
   function el(tag, cls, text) {
@@ -393,6 +454,7 @@ button { cursor: pointer; background: none; border: 0; }
 
   function renderGallery(list) {
     gal.textContent = '';
+    $('#gallery-empty').hidden = list.length > 0;
     list.forEach(function (w, i) {
       var wrap = el('div', 'cw'); wrap.style.setProperty('--i', i);
       var card = el('button', 'card'); card.type = 'button';
@@ -417,20 +479,19 @@ button { cursor: pointer; background: none; border: 0; }
     });
   }
 
-  renderGallery(placeholders); // tampil dulu, lalu diganti kalau data database tiba
   fetch('/api/projects')
     .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
     .then(function (rows) {
-      if (!Array.isArray(rows) || !rows.length) return;
+      if (!Array.isArray(rows)) rows = [];
       renderGallery(rows.map(function (r) {
         var meta = [r.category, r.year].filter(Boolean).join(' · ');
         return {
-          title: r.title, meta: meta, desc: r.description || '',
+          title: String(r.title || '').slice(0, 100), meta: meta, desc: r.description || '',
           image: httpsUrl(r.image_url), video: httpsUrl(r.video_url), link: httpsUrl(r.link_url)
         };
       }));
     })
-    .catch(function () { /* tetap pakai placeholder */ });
+    .catch(function () { renderGallery([]); });
 
   /* ---------- Media: alamat aman, Cloudinary, embed video ---------- */
   // Hanya alamat https yang dipakai; selain itu dianggap kosong.
@@ -495,18 +556,36 @@ button { cursor: pointer; background: none; border: 0; }
       : (hasMedia ? w.meta : w.meta + ' — gambar dan deskripsi akan muncul di sini.');
     var link = $('#lb-link');
     if (w.link) { link.href = w.link; link.hidden = false; } else { link.removeAttribute('href'); link.hidden = true; }
+    playSound('select');
     lb.classList.add('open'); $('#lb-close').focus();
   }
-  function closeLb() { lb.classList.remove('open'); $('#lb-media').textContent = ''; }
+  function closeLb() { playSound('back'); lb.classList.remove('open'); $('#lb-media').textContent = ''; }
   $('#lb-close').addEventListener('click', closeLb);
   lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
 
-  /* ---------- Form kontak (belum terhubung ke Resend) ---------- */
-  var form = $('#contact-form');
+  /* ---------- Form kontak (kirim lewat /api/contact -> Resend) ---------- */
+  var form = $('#contact-form'), statusEl = $('#status'), sending = false;
+  function note(msg, bad) {
+    statusEl.textContent = msg;
+    if (bad) { form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake'); }
+  }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    $('#status').textContent = 'Form belum terhubung ke email. Itu tahap berikutnya ✦';
-    form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
+    if (sending) return;
+    var d = {
+      name: form.elements.name.value.trim(), email: form.elements.email.value.trim(),
+      message: form.elements.message.value.trim(), website: form.elements.website.value
+    };
+    if (!d.name || !d.message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) { note('Isi nama, email yang valid, dan pesan dulu ya.', true); return; }
+    sending = true; var btn = form.querySelector('.send'); btn.disabled = true; note('Mengirim…');
+    fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (x) {
+        if (x.ok) { form.reset(); note('Terkirim! Terima kasih, aku balas secepatnya ✦'); }
+        else note(x.j && x.j.error ? x.j.error : 'Gagal mengirim. Coba lagi sebentar lagi.', true);
+      })
+      .catch(function () { note('Tidak bisa terhubung. Cek internetmu lalu coba lagi.', true); })
+      .then(function () { sending = false; btn.disabled = false; });
   });
 })();
 </script>
